@@ -65,6 +65,7 @@ public class MazeGenerator : MonoBehaviour
                 chosen.Visited = true;
                 stack.Push(chosen);
                 chosen.DistanceFromStart = current.DistanceFromStart + 1;
+                FindObjectOfType<MazeSpawner>().DistanceForStart.Add(current.DistanceFromStart + 1);
                 current = chosen;
             }
             else
