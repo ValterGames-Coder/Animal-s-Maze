@@ -5,6 +5,7 @@ using System.Collections;
 public class RabbitController : MonoBehaviour
 {
     private Vector2 _nextPosition, _oldPosition;
+    [Header("Ходьба")]
     [SerializeField] private float _speed;
     [SerializeField] private AnimationCurve _curve;
     private List<RaycastHit2D> _rays;
@@ -24,10 +25,14 @@ public class RabbitController : MonoBehaviour
     };
 
     private MazeSpawner _mazeSpawner;
+    private WinsController _winsController;
+
+    [SerializeField] private GameObject _winPanel;
 
     private void Start()
     {
         _mazeSpawner = FindObjectOfType<MazeSpawner>();
+        _winsController = FindObjectOfType<WinsController>();
     }
 
     private void Update()
@@ -41,10 +46,15 @@ public class RabbitController : MonoBehaviour
                 _mazeSpawner.DistanceToStart--;
             }
         }
+        //Walk
         transform.position = Vector2.Lerp(
             transform.position, 
             new Vector2(Mathf.Round(_nextPosition.x), Mathf.Round(_nextPosition.y)), 
             _curve.Evaluate(_speed * Time.deltaTime));
+        //Panel
+        _winPanel.SetActive(_winsController.Win);
+
+        
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -54,6 +64,12 @@ public class RabbitController : MonoBehaviour
             _nextPosition = _oldPosition;
             StartCoroutine(HittingTheWall(_speed));
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (_mazeSpawner.DistanceToStart >= 0) _winsController.Win = true;
+        else _winsController.Win = false;
     }
 
     private IEnumerator HittingTheWall(float oldSpeed)

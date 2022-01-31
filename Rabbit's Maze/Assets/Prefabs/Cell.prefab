@@ -476,9 +476,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2961974097797930318}
   - component: {fileID: 6277952999996869265}
+  - component: {fileID: 7289557558627977593}
   m_Layer: 0
   m_Name: Cell
-  m_TagString: Untagged
+  m_TagString: IsMaze
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -514,3 +515,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WallLeft: {fileID: 2332554476902420888}
   WallBottom: {fileID: 3324409449384563900}
+--- !u!61 &7289557558627977593
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9146958560999484667}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.3, y: 1.3}
+  m_EdgeRadius: 0

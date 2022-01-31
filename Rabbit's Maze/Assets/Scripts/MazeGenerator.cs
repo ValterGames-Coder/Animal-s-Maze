@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
-    public int Width = 5;
-    public int Height = 5;
-
+    public int Width;
+    public int Height;
+    
     public Maze GenerateMaze()
     {
         MazeGeneratorCell[,] cells = new MazeGeneratorCell[Width, Height];
