@@ -15,16 +15,19 @@ public class MazeSpawner : MonoBehaviour
     [HideInInspector] public int DistanceToStart;
     [SerializeField] private TMP_Text _distanceText;
     [HideInInspector] public Vector2 MazeZoneOffset;
+    [Header("Items")]
+    [SerializeField] private List<GameObject> _items;
+    [SerializeField] private int Width, Height;
     private CameraState cameraState;
 
     private void Start()
     {
         cameraState = FindObjectOfType<CameraState>();
         MazeGenerator generator = new MazeGenerator();
-        
+
         generator.Width = (int)cameraState.Sizes[cameraState.LevelForList].x;
         generator.Height = (int)cameraState.Sizes[cameraState.LevelForList].y;
-        
+
         Debug.Log($"Width: {generator.Width} Height: {generator.Height}");
 
         maze = generator.GenerateMaze();
@@ -39,7 +42,61 @@ public class MazeSpawner : MonoBehaviour
                 
                 c.WallLeft.SetActive(maze.cells[x, y].WallLeft);
                 c.WallBottom.SetActive(maze.cells[x, y].WallBottom);
-                
+            }
+        }
+        
+        for (int x = 0; x < maze.cells.GetLength(0); x++)
+        {
+            for (int y = 0; y < maze.cells.GetLength(1); y++)
+            {
+                if (maze.cells[x, y].Visited)
+                {
+                    if (maze.cells[x, y].WallBottom == false)
+                    {
+                        if (maze.cells[x, y + 1].WallBottom)
+                        {
+                            if (maze.cells[x, y].WallLeft)
+                            {
+                                if (maze.cells[x + 1, y].WallLeft)
+                                {
+                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                }
+                            }
+                        }
+                    }
+                    else if (maze.cells[x, y].WallBottom)
+                    {
+                        if (maze.cells[x, y].WallLeft)
+                        {
+                            if (maze.cells[x + 1, y].WallLeft)
+                            {
+                                if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                            }
+                        }
+                        
+                        
+                        if (maze.cells[x, y].WallLeft)
+                        {
+                            if (maze.cells[x + 1, y].WallLeft == false)
+                            {
+                                if (maze.cells[x, y + 1].WallBottom)
+                                {
+                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                }
+                            }
+                        }
+                        else if (maze.cells[x, y].WallLeft == false)
+                        {
+                            if (maze.cells[x + 1, y].WallLeft)
+                            {
+                                if (maze.cells[x, y + 1].WallBottom)
+                                {
+                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -61,5 +118,12 @@ public class MazeSpawner : MonoBehaviour
         mazeZone.GetComponent<BoxCollider2D>().offset = offset;
         mazeZone.transform.position = Vector2.zero;
         mazeZone.tag = "IsMaze";
+    }
+
+    private void SpawnItem(int X, int Y)
+    {
+        int item = Random.Range(0, _items.Count);
+        Vector2 position = new Vector2(X, Y);
+        Instantiate(_items[item], position, Quaternion.identity);
     }
 }

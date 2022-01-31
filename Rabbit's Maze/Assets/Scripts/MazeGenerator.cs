@@ -59,7 +59,7 @@ public class MazeGenerator : MonoBehaviour
 
             if (unvisitedNeighbours.Count > 0)
             {
-                MazeGeneratorCell chosen = unvisitedNeighbours[UnityEngine.Random.Range(0, unvisitedNeighbours.Count)];
+                MazeGeneratorCell chosen = unvisitedNeighbours[Random.Range(0, unvisitedNeighbours.Count)];
                 RemoveWall(current, chosen);
 
                 chosen.Visited = true;
