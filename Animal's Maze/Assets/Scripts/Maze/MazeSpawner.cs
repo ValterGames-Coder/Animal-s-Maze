@@ -5,31 +5,31 @@ using TMPro;
 
 public class MazeSpawner : MonoBehaviour
 {
+    [Header("Generator Maze")]
     public CellVariable CellPrefab;
     public Vector3 CellSize = new Vector3(1,1,0);
 
-    public Maze maze;
+    [HideInInspector] public Maze maze;
     
-    public HintRenderer HintRenderer;
+    [SerializeField] private HintRenderer _hintRenderer;
     [HideInInspector] public List<int> DistanceForStart;
     [HideInInspector] public int DistanceToStart;
     [SerializeField] private TMP_Text _distanceText;
     [HideInInspector] public Vector2 MazeZoneOffset;
-    [Header("Items")]
+    
+    [Header("Generator Items")]
     [SerializeField] private List<GameObject> _items;
-    [SerializeField] private int Width, Height;
-    private CameraState cameraState;
+    private CameraState _cameraState;
 
     private void Start()
     {
-        cameraState = FindObjectOfType<CameraState>();
-        MazeGenerator generator = new MazeGenerator();
-
-        generator.Width = (int)cameraState.Sizes[cameraState.LevelForList].x;
-        generator.Height = (int)cameraState.Sizes[cameraState.LevelForList].y;
-
-        Debug.Log($"Width: {generator.Width} Height: {generator.Height}");
-
+        _cameraState = FindObjectOfType<CameraState>();
+        MazeGenerator generator = new MazeGenerator
+        {
+            Width = (int) _cameraState.Sizes[_cameraState.LevelForList].x,
+            Height = (int) _cameraState.Sizes[_cameraState.LevelForList].y
+        };
+        
         maze = generator.GenerateMaze();
         
         GenerateMazeZone(generator, MazeZoneOffset);
@@ -101,8 +101,8 @@ public class MazeSpawner : MonoBehaviour
         }
 
         DistanceToStart = DistanceForStart.Max() + 3;
-
-        HintRenderer.DrawPath();
+        
+        if(_hintRenderer.gameObject.activeInHierarchy) _hintRenderer.DrawPath();
     }
 
     private void Update()

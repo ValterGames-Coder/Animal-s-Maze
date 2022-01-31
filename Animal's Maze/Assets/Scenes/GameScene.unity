@@ -941,7 +941,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1500686426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1212,7 +1212,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2126953903}
   - component: {fileID: 2126953902}
-  - component: {fileID: 2126953904}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1234,7 +1233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CellPrefab: {fileID: 6277952999996869265, guid: a8edefeeaf629b8bda964124f8bbca0c, type: 3}
   CellSize: {x: 1, y: 1, z: 0}
-  HintRenderer: {fileID: 1500686426}
+  _hintRenderer: {fileID: 0}
   DistanceForStart: 
   DistanceToStart: 0
   _distanceText: {fileID: 1939813614}
@@ -1242,8 +1241,6 @@ MonoBehaviour:
   _items:
   - {fileID: 1985812623818141803, guid: 39eeb98a19f6a60bf8489feee839131a, type: 3}
   - {fileID: 912844424656790173, guid: 00dc002ba9d94d4f08fd988ca6f73440, type: 3}
-  Width: 0
-  Height: 0
 --- !u!4 &2126953903
 Transform:
   m_ObjectHideFlags: 0
@@ -1258,23 +1255,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2126953904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126953901}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd41ae647052acf1d80df24cda2434f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _items:
-  - {fileID: 912844424656790173, guid: 00dc002ba9d94d4f08fd988ca6f73440, type: 3}
-  - {fileID: 1985812623818141803, guid: 39eeb98a19f6a60bf8489feee839131a, type: 3}
-  Width: 0
-  Height: 0
-  HowMuchToSpawn: 3
-  _cameraState: {fileID: 0}
-  _hintRenderer: {fileID: 1500686426}

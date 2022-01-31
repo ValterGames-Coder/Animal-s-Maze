@@ -13,7 +13,6 @@ public class CameraState : MonoBehaviour
     [SerializeField] private TMP_Text _levelText;
     private WinsController _winsController;
     public int LevelForList;
-
     
     void Start()
     {
@@ -21,6 +20,7 @@ public class CameraState : MonoBehaviour
         _winsController = FindObjectOfType<WinsController>();
         if(PlayerPrefs.HasKey("Level") == false) PlayerPrefs.SetInt("Level", 1);
         Level = PlayerPrefs.GetInt("Level");
+        
         if (Level >= 1 && Level <= 19)
         {
             LevelForList = 0;
@@ -64,7 +64,7 @@ public class CameraState : MonoBehaviour
         if (_winsController.Win) StartCoroutine(NextLevel());
     }
     
-    private bool _nextLevelComplete = false;
+    private bool _nextLevelComplete;
 
     private IEnumerator NextLevel()
     {
