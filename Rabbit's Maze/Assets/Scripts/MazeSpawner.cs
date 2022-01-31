@@ -21,41 +21,9 @@ public class MazeSpawner : MonoBehaviour
     {
         cameraState = FindObjectOfType<CameraState>();
         MazeGenerator generator = new MazeGenerator();
-        if (cameraState.Level >= 1 && cameraState.Level <= 19)
-        {
-            generator.Width = (int)cameraState.Sizes[0].x;
-            generator.Height = (int)cameraState.Sizes[0].y;
-        }
-        else if (cameraState.Level >= 20 && cameraState.Level <= 39)
-        {
-            generator.Width = (int)cameraState.Sizes[1].x;
-            generator.Height = (int)cameraState.Sizes[1].y;
-        }
-        else if (cameraState.Level >= 40 && cameraState.Level <= 69)
-        {
-            generator.Width = (int)cameraState.Sizes[2].x;
-            generator.Height = (int)cameraState.Sizes[2].y;
-        }
-        else if (cameraState.Level >= 70 && cameraState.Level <= 99)
-        {
-            generator.Width = (int)cameraState.Sizes[3].x;
-            generator.Height = (int)cameraState.Sizes[3].y;
-        }
-        else if (cameraState.Level >= 100 && cameraState.Level <= 149)
-        {
-            generator.Width = (int)cameraState.Sizes[4].x;
-            generator.Height = (int)cameraState.Sizes[4].y;
-        }
-        else if (cameraState.Level >= 150 && cameraState.Level <= 199)
-        {
-            generator.Width = (int)cameraState.Sizes[5].x;
-            generator.Height = (int)cameraState.Sizes[5].y;
-        }
-        else if (cameraState.Level >= 200)
-        {
-            generator.Width = (int)cameraState.Sizes[6].x;
-            generator.Height = (int)cameraState.Sizes[6].y;
-        }
+        
+        generator.Width = (int)cameraState.Sizes[cameraState.LevelForList].x;
+        generator.Height = (int)cameraState.Sizes[cameraState.LevelForList].y;
         
         Debug.Log($"Width: {generator.Width} Height: {generator.Height}");
 

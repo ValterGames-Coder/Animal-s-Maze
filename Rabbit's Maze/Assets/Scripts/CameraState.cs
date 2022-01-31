@@ -8,10 +8,11 @@ public class CameraState : MonoBehaviour
 {
     public int Level;
     [SerializeField] private List<Vector2> _positions;
-    public List<Vector2> Sizes;
+    public List<Vector3> Sizes;
     private MazeSpawner _mazeSpawner;
     [SerializeField] private TMP_Text _levelText;
     private WinsController _winsController;
+    public int LevelForList;
 
     
     void Start()
@@ -22,40 +23,36 @@ public class CameraState : MonoBehaviour
         Level = PlayerPrefs.GetInt("Level");
         if (Level >= 1 && Level <= 19)
         {
-            transform.position = _positions[0];
-            _mazeSpawner.MazeZoneOffset = _positions[0];
+            LevelForList = 0;
         }
         else if (Level >= 20 && Level <= 39)
         {
-            transform.position = _positions[1];
-            _mazeSpawner.MazeZoneOffset = _positions[1];
+            LevelForList = 1;
         }
         else if (Level >= 40 && Level <= 69)
         {
-            transform.position = _positions[2];
-            _mazeSpawner.MazeZoneOffset = _positions[2];
+            LevelForList = 2;
         }
         else if (Level >= 70 && Level <= 99)
         {
-            transform.position = _positions[3];
-            _mazeSpawner.MazeZoneOffset = _positions[3];
+            LevelForList = 3;
         }
         else if (Level >= 100 && Level <= 149)
         {
-            transform.position = _positions[4];
-            _mazeSpawner.MazeZoneOffset = _positions[4];
+            LevelForList = 4;
         }
         else if (Level >= 150 && Level <= 199)
         {
-            transform.position = _positions[5];
-            _mazeSpawner.MazeZoneOffset = _positions[5];
+            LevelForList = 5;
         }
         else if (Level >= 200)
         {
-            transform.position = _positions[6];
+            LevelForList = 6;
             Camera.main.orthographicSize = 9;
-            _mazeSpawner.MazeZoneOffset = _positions[6];
         }
+        
+        transform.position = _positions[LevelForList];
+        _mazeSpawner.MazeZoneOffset = _positions[LevelForList];
 
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 

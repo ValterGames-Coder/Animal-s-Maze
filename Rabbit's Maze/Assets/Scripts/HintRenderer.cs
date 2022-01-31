@@ -7,6 +7,9 @@ public class HintRenderer : MonoBehaviour
 
     private LineRenderer componentLineRenderer;
 
+    public List<Vector3> positions;
+
+
     private void Start()
     {
         componentLineRenderer = GetComponent<LineRenderer>();
@@ -18,11 +21,12 @@ public class HintRenderer : MonoBehaviour
         int x = maze.finishPosition.x;
         int y = maze.finishPosition.y;
         Debug.Log($"Finish x: {maze.finishPosition.x} Finish y: {maze.finishPosition.y}");
-        List<Vector3> positions = new List<Vector3>();
+        positions = new List<Vector3>();
 
-        while ((x != 0 || y != 0) && positions.Count < 10000)
+        while ((x != 0 || y != 0) && positions.Count < 100000)
         {
-            positions.Add(new Vector3(x * MazeSpawner.CellSize.x, y * MazeSpawner.CellSize.y, y * MazeSpawner.CellSize.z));
+            Vector3 NewPosition = new Vector3(x * MazeSpawner.CellSize.x, y * MazeSpawner.CellSize.y,y * MazeSpawner.CellSize.z);
+            positions.Add(NewPosition);
 
             MazeGeneratorCell currentCell = maze.cells[x, y];
 
