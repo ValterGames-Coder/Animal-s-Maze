@@ -13,8 +13,9 @@ public class MazeSpawner : MonoBehaviour
     
     [SerializeField] private HintRenderer _hintRenderer;
     [HideInInspector] public List<int> DistanceForStart;
+    private List<Vector2> _isGoals = new List<Vector2>();
+    private int _howMuchToSpawn;
     [HideInInspector] public int DistanceToStart;
-    private int HowMuchToSpawn;
     [SerializeField] private TMP_Text _distanceText;
     [HideInInspector] public Vector2 MazeZoneOffset;
     
@@ -30,9 +31,8 @@ public class MazeSpawner : MonoBehaviour
             Width = (int) _cameraState.Sizes[_cameraState.LevelForList].x,
             Height = (int) _cameraState.Sizes[_cameraState.LevelForList].y
         };
-        
-        HowMuchToSpawn = (int)_cameraState.Sizes[_cameraState.LevelForList].z;
-        
+
+        _howMuchToSpawn = (int)_cameraState.Sizes[_cameraState.LevelForList].z;
         maze = generator.GenerateMaze();
         
         GenerateMazeZone(generator, MazeZoneOffset);
@@ -62,7 +62,7 @@ public class MazeSpawner : MonoBehaviour
                             {
                                 if (maze.cells[x + 1, y].WallLeft)
                                 {
-                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                    if (maze.cells[x, y] != maze.cells[0, 0]) _isGoals.Add(new Vector2(x, y));
                                 }
                             }
                         }
@@ -73,7 +73,7 @@ public class MazeSpawner : MonoBehaviour
                         {
                             if (maze.cells[x + 1, y].WallLeft)
                             {
-                                if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                if (maze.cells[x, y] != maze.cells[0, 0]) _isGoals.Add(new Vector2(x, y));
                             }
                         }
                         
@@ -84,7 +84,7 @@ public class MazeSpawner : MonoBehaviour
                             {
                                 if (maze.cells[x, y + 1].WallBottom)
                                 {
-                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                    if (maze.cells[x, y] != maze.cells[0, 0]) _isGoals.Add(new Vector2(x, y));
                                 }
                             }
                         }
@@ -94,7 +94,7 @@ public class MazeSpawner : MonoBehaviour
                             {
                                 if (maze.cells[x, y + 1].WallBottom)
                                 {
-                                    if(maze.cells[x, y] != maze.cells[0, 0]) SpawnItem(x, y);
+                                    if (maze.cells[x, y] != maze.cells[0, 0]) {_isGoals.Add(new Vector2(x, y));}
                                 }
                             }
                         }
@@ -113,6 +113,8 @@ public class MazeSpawner : MonoBehaviour
         {
             // ignored
         }
+        
+        SpawnItem();
     }
 
     private void Update()
@@ -130,14 +132,15 @@ public class MazeSpawner : MonoBehaviour
         mazeZone.tag = "IsMaze";
     }
 
-    private void SpawnItem(int X, int Y)
+    private void SpawnItem()
     {
-        if (HowMuchToSpawn > 0)
+        for (int i = 0; i < _howMuchToSpawn; i++)
         {
-            HowMuchToSpawn--;
             int item = Random.Range(0, _items.Count);
-            Vector2 position = new Vector2(X, Y);
+            int isGoal = Random.Range(0, _isGoals.Count);
+            Vector2 position = new Vector2(_isGoals[isGoal].x, _isGoals[isGoal].y);
             Instantiate(_items[item], position, Quaternion.identity);
+            _isGoals.Remove(new Vector2(_isGoals[isGoal].x, _isGoals[isGoal].y));
         }
     }
 }
