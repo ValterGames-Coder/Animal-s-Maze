@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class CameraState : MonoBehaviour
 {
@@ -72,6 +71,7 @@ public class CameraState : MonoBehaviour
         _nextLevelComplete = true;
         PlayerPrefs.SetInt("Level", Level);
         yield return new WaitForSeconds(3);
-        SceneManager.LoadScene(0);
+        SceneController.LoadScene(0);
     } 
+    
 }

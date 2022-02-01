@@ -1,60 +1,84 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 
 public class RabbitController : MonoBehaviour
 {
-    private Vector2 _nextPosition, _oldPosition;
-    [Header("Ходьба")]
+    [Header("Ходьба")] 
     [SerializeField] private float _speed;
     [SerializeField] private AnimationCurve _curve;
-    private List<RaycastHit2D> _rays;
+    private Vector2 _nextPosition, _oldPosition;
+
     private List<Vector2> _position = new List<Vector2>()
     {
-        new Vector2(-1, 0),
-        new Vector2(1, 0),
-        new Vector2(0, 1),
-        new Vector2(0, -1)
+        new Vector2(1, 0), // Вправо
+        new Vector2(-1, 0), // Влево
+        new Vector2(0, 1), // Вверх
+        new Vector2(0, -1) // Вниз
     };
-    private List<KeyCode> _keys = new List<KeyCode>()
-    {
-        KeyCode.LeftArrow, 
-        KeyCode.RightArrow, 
-        KeyCode.UpArrow, 
-        KeyCode.DownArrow
-    };
+    
+    //Свайпы
+    private Vector2 _touchIn, _touchOut;
+    private float _dragDistance;
 
     private MazeSpawner _mazeSpawner;
     private WinsController _winsController;
 
-    [SerializeField] private GameObject _winPanel;
+    [SerializeField] private GameObject _winPanel, _losePanel;
 
     private void Start()
     {
-        _mazeSpawner = FindObjectOfType<MazeSpawner>();
         _winsController = FindObjectOfType<WinsController>();
+        _mazeSpawner = FindObjectOfType<MazeSpawner>();
     }
 
     private void Update()
     {
-        for (int i = 0; i < _keys.Count; i++)
-        {
-            if (Input.GetKeyDown(_keys[i]) && _mazeSpawner.DistanceToStart > 0)
-            {
-                _oldPosition = transform.position;
-                _nextPosition = new Vector2(transform.position.x + _position[i].x, transform.position.y + _position[i].y);
-                _mazeSpawner.DistanceToStart--;
-            }
-        }
-        //Walk
+        _winPanel.SetActive(_winsController.Win);
+        Swipe();
+        //Move
         transform.position = Vector2.Lerp(
             transform.position, 
             new Vector2(Mathf.Round(_nextPosition.x), Mathf.Round(_nextPosition.y)), 
             _curve.Evaluate(_speed * Time.deltaTime));
-        //Panel
-        _winPanel.SetActive(_winsController.Win);
-
         
+        if (_mazeSpawner.DistanceToStart <= 0 && _winsController.Win == false && 
+            Math.Abs(transform.position.x - _nextPosition.x) < 0.2f && Math.Abs(transform.position.y - _nextPosition.y) < 0.2f)
+        {
+            _losePanel.SetActive(true);
+        }
+    }
+
+    private void Swipe()
+    {
+        if (_mazeSpawner.DistanceToStart > 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                _touchIn = Input.mousePosition;
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+                _touchOut = Input.mousePosition;
+                Vector2 delta = _touchIn - _touchOut;
+                _oldPosition = transform.position;
+                if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                {
+                    _nextPosition = delta.x < 0
+                        ? new Vector2(transform.position.x + _position[0].x, transform.position.y + _position[0].y)
+                        : new Vector2(transform.position.x + _position[1].x, transform.position.y + _position[1].y);
+                }
+                else
+                {
+                    _nextPosition = delta.y < 0
+                        ? new Vector2(transform.position.x + _position[2].x, transform.position.y + _position[2].y)
+                        : new Vector2(transform.position.x + _position[3].x, transform.position.y + _position[3].y);
+                }
+
+                _mazeSpawner.DistanceToStart--;
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -79,4 +103,5 @@ public class RabbitController : MonoBehaviour
         yield return new WaitForSeconds(1);
         _speed = oldSpeed;
     }
+
 }

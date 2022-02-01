@@ -14,6 +14,7 @@ public class MazeSpawner : MonoBehaviour
     [SerializeField] private HintRenderer _hintRenderer;
     [HideInInspector] public List<int> DistanceForStart;
     [HideInInspector] public int DistanceToStart;
+    private int HowMuchToSpawn;
     [SerializeField] private TMP_Text _distanceText;
     [HideInInspector] public Vector2 MazeZoneOffset;
     
@@ -29,6 +30,8 @@ public class MazeSpawner : MonoBehaviour
             Width = (int) _cameraState.Sizes[_cameraState.LevelForList].x,
             Height = (int) _cameraState.Sizes[_cameraState.LevelForList].y
         };
+        
+        HowMuchToSpawn = (int)_cameraState.Sizes[_cameraState.LevelForList].z;
         
         maze = generator.GenerateMaze();
         
@@ -101,8 +104,15 @@ public class MazeSpawner : MonoBehaviour
         }
 
         DistanceToStart = DistanceForStart.Max() + 3;
-        
-        if(_hintRenderer.gameObject.activeInHierarchy) _hintRenderer.DrawPath();
+
+        try
+        {
+            _hintRenderer.DrawPath();
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void Update()
@@ -122,8 +132,12 @@ public class MazeSpawner : MonoBehaviour
 
     private void SpawnItem(int X, int Y)
     {
-        int item = Random.Range(0, _items.Count);
-        Vector2 position = new Vector2(X, Y);
-        Instantiate(_items[item], position, Quaternion.identity);
+        if (HowMuchToSpawn > 0)
+        {
+            HowMuchToSpawn--;
+            int item = Random.Range(0, _items.Count);
+            Vector2 position = new Vector2(X, Y);
+            Instantiate(_items[item], position, Quaternion.identity);
+        }
     }
 }
