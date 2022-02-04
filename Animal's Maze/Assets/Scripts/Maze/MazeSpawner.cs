@@ -10,18 +10,16 @@ public class MazeSpawner : MonoBehaviour
     public Vector3 CellSize = new Vector3(1,1,0);
 
     [HideInInspector] public Maze maze;
-    
-    [SerializeField] private HintRenderer _hintRenderer;
     [HideInInspector] public List<int> DistanceForStart;
     private List<Vector2> _isGoals = new List<Vector2>();
     private int _howMuchToSpawn;
     [HideInInspector] public int DistanceToStart;
     [SerializeField] private TMP_Text _distanceText;
-    [HideInInspector] public Vector2 MazeZoneOffset;
-    
+
     [Header("Generator Items")]
     [SerializeField] private List<GameObject> _items;
     private CameraState _cameraState;
+    [HideInInspector] public Vector2 FinishPositionForHint;
 
     private void Start()
     {
@@ -31,6 +29,8 @@ public class MazeSpawner : MonoBehaviour
             Width = (int) _cameraState.Sizes[_cameraState.LevelForList].x,
             Height = (int) _cameraState.Sizes[_cameraState.LevelForList].y
         };
+
+        FinishPositionForHint = generator.FinishPositionForHint;
 
         _howMuchToSpawn = (int)_cameraState.Sizes[_cameraState.LevelForList].z;
         maze = generator.GenerateMaze();
@@ -103,15 +103,6 @@ public class MazeSpawner : MonoBehaviour
         }
 
         DistanceToStart = DistanceForStart.Max() + 3;
-
-        try
-        {
-            _hintRenderer.DrawPath();
-        }
-        catch
-        {
-            // ignored
-        }
 
         SpawnItem();
     }

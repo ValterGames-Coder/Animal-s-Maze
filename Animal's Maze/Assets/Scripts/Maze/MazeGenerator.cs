@@ -5,6 +5,7 @@ public class MazeGenerator : MonoBehaviour
 {
     public int Width;
     public int Height;
+    public Vector2 FinishPositionForHint;
     
     public Maze GenerateMaze()
     {
@@ -108,24 +109,27 @@ public class MazeGenerator : MonoBehaviour
         if (furthest.X == 0)
         {
             furthest.WallLeft = false;
-            GenerateMazeZone(new Vector2(furthest.X - 1.5f, furthest.Y)); // Влево
+            GenerateMazeZone( new Vector2(furthest.X - 1.5f, furthest.Y));
+            FinishPositionForHint = new Vector2(furthest.X - 1, furthest.Y); // Влево
         }
         else if (furthest.Y == 0)
         {
             furthest.WallBottom = false;
-            GenerateMazeZone(new Vector2(furthest.X, furthest.Y - 1.5f)); // Вниз
+            GenerateMazeZone(new Vector2(furthest.X, furthest.Y - 1.5f));
+            FinishPositionForHint = new Vector2(furthest.X, furthest.Y - 1); // Вниз
         }
         else if (furthest.X == Width - 2)
         {
             maze[furthest.X + 1, furthest.Y].WallLeft = false;
-            GenerateMazeZone(new Vector2(furthest.X + 1.5f, furthest.Y)); // Вправо
+            GenerateMazeZone(new Vector2(furthest.X + 1.5f, furthest.Y));
+            FinishPositionForHint = new Vector2(furthest.X + 1, furthest.Y); // Вправо
         }
         else if (furthest.Y == Height - 2)
         {
             maze[furthest.X, furthest.Y + 1].WallBottom = false;
-            GenerateMazeZone(new Vector2(furthest.X, furthest.Y + 1.5f)); // Вверх
+            GenerateMazeZone(new Vector2(furthest.X, furthest.Y + 1.5f));
+            FinishPositionForHint = new Vector2(furthest.X, furthest.Y + 1); // Вверх
         }
-
         return new Vector2Int(furthest.X, furthest.Y);
     }
     

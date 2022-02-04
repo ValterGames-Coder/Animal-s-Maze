@@ -20,6 +20,10 @@ public class HintRenderer : MonoBehaviour
         int y = maze.finishPosition.y;
         positions = new List<Vector3>();
 
+        Vector2 startPosition = new Vector2(GameObject.Find("MazeZone").transform.position.x, 
+          GameObject.Find("MazeZone").transform.position.y);
+        positions.Add(startPosition);
+
         while ((x != 0 || y != 0) && positions.Count < 100000)
         {
             positions.Add(new Vector3(x * MazeSpawner.CellSize.x, y * MazeSpawner.CellSize.y,y * MazeSpawner.CellSize.z));
@@ -52,8 +56,26 @@ public class HintRenderer : MonoBehaviour
             }
         }
 
+        if (positions[1].x > startPosition.x)
+        {
+            positions[0] = new Vector3(startPosition.x + .5f, startPosition.y);
+        }
+        else if (positions[1].x < startPosition.x)
+        {
+            positions[0] = new Vector3(startPosition.x - .5f, startPosition.y);
+        }
+        else if (positions[1].y > startPosition.y)
+        {
+            positions[0] = new Vector3(startPosition.x, startPosition.y  + .5f);
+        }
+        else
+        {
+            positions[0] = new Vector3(startPosition.x, startPosition.y - .5f);
+        }
+
         positions.Add(Vector3.zero);
         _componentLineRenderer.positionCount = positions.Count;
         _componentLineRenderer.SetPositions(positions.ToArray());
+        
     }
 }

@@ -96,7 +96,7 @@ public class RabbitController : MonoBehaviour
         if (other.collider.CompareTag("Wall"))
         {
             _nextPosition = _oldPosition;
-            StartCoroutine(HittingTheWall(_speed));
+            //StartCoroutine(HittingTheWall(_speed));
         }
     }
 

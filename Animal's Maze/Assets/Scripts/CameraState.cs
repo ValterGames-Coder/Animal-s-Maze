@@ -76,8 +76,6 @@ public class CameraState : MonoBehaviour
         transform.position = _positions[LevelForList];
         _camera.orthographicSize = _positions[LevelForList].z;
         _camera.backgroundColor = _colors[LevelForList];
-        
-        _mazeSpawner.MazeZoneOffset = _positions[LevelForList];
 
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
