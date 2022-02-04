@@ -10,7 +10,7 @@ public class RabbitController : MonoBehaviour
     [SerializeField] private AnimationCurve _curve;
     [SerializeField] private AudioSource _stepAudio;
     private Vector2 _nextPosition, _oldPosition;
-    private bool _canSwipe = true;
+    [HideInInspector] public bool CanSwipe = true;
 
     private List<Vector2> _position = new List<Vector2>()
     {
@@ -38,7 +38,6 @@ public class RabbitController : MonoBehaviour
     private void Update()
     {
         _winPanel.SetActive(_winsController.Win);
-        Swipe();
         //Move
         transform.position = Vector2.Lerp(
             transform.position, 
@@ -49,41 +48,45 @@ public class RabbitController : MonoBehaviour
             Math.Abs(transform.position.x - _nextPosition.x) < 0.05f && Math.Abs(transform.position.y - _nextPosition.y) < 0.05f)
         {
             _losePanel.SetActive(true);
-            _canSwipe = false;
+            CanSwipe = false;
         }
     }
 
-    private void Swipe()
+    public void TouchUp()
     {
-        if (_canSwipe)
+        if (CanSwipe)
         {
             if (_mazeSpawner.DistanceToStart > 0)
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                _touchOut = Input.mousePosition;
+                Vector2 delta = _touchIn - _touchOut;
+                _oldPosition = transform.position;
+                if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
                 {
-                    _touchIn = Input.mousePosition;
+                    _nextPosition = delta.x < 0
+                        ? new Vector2(transform.position.x + _position[0].x, transform.position.y + _position[0].y)
+                        : new Vector2(transform.position.x + _position[1].x, transform.position.y + _position[1].y);
                 }
-                else if (Input.GetKeyUp(KeyCode.Mouse0))
+                else
                 {
-                    _touchOut = Input.mousePosition;
-                    Vector2 delta = _touchIn - _touchOut;
-                    _oldPosition = transform.position;
-                    if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
-                    {
-                        _nextPosition = delta.x < 0
-                            ? new Vector2(transform.position.x + _position[0].x, transform.position.y + _position[0].y)
-                            : new Vector2(transform.position.x + _position[1].x, transform.position.y + _position[1].y);
-                    }
-                    else
-                    {
-                        _nextPosition = delta.y < 0
-                            ? new Vector2(transform.position.x + _position[2].x, transform.position.y + _position[2].y)
-                            : new Vector2(transform.position.x + _position[3].x, transform.position.y + _position[3].y);
-                    }
+                    _nextPosition = delta.y < 0
+                        ? new Vector2(transform.position.x + _position[2].x, transform.position.y + _position[2].y)
+                        : new Vector2(transform.position.x + _position[3].x, transform.position.y + _position[3].y);
+                }
 
-                    _mazeSpawner.DistanceToStart--;
-                    _stepAudio.Play();
-                }
+                _mazeSpawner.DistanceToStart--;
+                _stepAudio.Play();
+            }
+        }
+    }
+
+    public void TouchDown()
+    {
+        if (CanSwipe)
+        {
+            if (_mazeSpawner.DistanceToStart > 0)
+            {
+                _touchIn = Input.mousePosition;
             }
         }
     }
@@ -97,10 +100,13 @@ public class RabbitController : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (_mazeSpawner.DistanceToStart >= 0) _winsController.Win = true;
-        else _winsController.Win = false;
+        if (other.CompareTag("IsMaze"))
+        {
+            if (_mazeSpawner.DistanceToStart >= 0) _winsController.Win = true;
+            else _winsController.Win = false;
+        }
     }
 
     private IEnumerator HittingTheWall(float oldSpeed)

@@ -105,11 +105,36 @@ public class MazeGenerator : MonoBehaviour
             if (maze[0, y].DistanceFromStart > furthest.DistanceFromStart) furthest = maze[0, y];
         }
 
-        if (furthest.X == 0) furthest.WallLeft = false;
-        else if (furthest.Y == 0) furthest.WallBottom = false;
-        else if (furthest.X == Width - 2) maze[furthest.X + 1, furthest.Y].WallLeft = false;
-        else if (furthest.Y == Height - 2) maze[furthest.X, furthest.Y + 1].WallBottom = false;
+        if (furthest.X == 0)
+        {
+            furthest.WallLeft = false;
+            GenerateMazeZone(new Vector2(furthest.X - 1.5f, furthest.Y)); // Влево
+        }
+        else if (furthest.Y == 0)
+        {
+            furthest.WallBottom = false;
+            GenerateMazeZone(new Vector2(furthest.X, furthest.Y - 1.5f)); // Вниз
+        }
+        else if (furthest.X == Width - 2)
+        {
+            maze[furthest.X + 1, furthest.Y].WallLeft = false;
+            GenerateMazeZone(new Vector2(furthest.X + 1.5f, furthest.Y)); // Вправо
+        }
+        else if (furthest.Y == Height - 2)
+        {
+            maze[furthest.X, furthest.Y + 1].WallBottom = false;
+            GenerateMazeZone(new Vector2(furthest.X, furthest.Y + 1.5f)); // Вверх
+        }
 
         return new Vector2Int(furthest.X, furthest.Y);
+    }
+    
+    private void GenerateMazeZone(Vector2 offset)
+    {
+        GameObject mazeZone = new GameObject("MazeZone");
+        mazeZone.AddComponent<BoxCollider2D>().size = new Vector2(1, 1);
+        mazeZone.GetComponent<BoxCollider2D>().isTrigger = true;
+        mazeZone.transform.position = offset;
+        mazeZone.tag = "IsMaze";
     }
 }

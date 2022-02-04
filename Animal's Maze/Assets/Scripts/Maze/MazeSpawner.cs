@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using TMPro;
-using Random = UnityEngine.Random;
 
 public class MazeSpawner : MonoBehaviour
 {
@@ -36,19 +34,14 @@ public class MazeSpawner : MonoBehaviour
 
         _howMuchToSpawn = (int)_cameraState.Sizes[_cameraState.LevelForList].z;
         maze = generator.GenerateMaze();
+        Debug.Log($"Finish position: {maze.finishPosition}");
         
-        GenerateMazeZone(generator, MazeZoneOffset);
-        
-        GameObject Maze = new GameObject("Maze");
-
         for (int x = 0; x < maze.cells.GetLength(0); x++)
         {
             for (int y = 0; y < maze.cells.GetLength(1); y++)
             {
                 CellVariable c = Instantiate(CellPrefab, new Vector3(x * CellSize.x, y * CellSize.y, y * CellSize.z), Quaternion.identity);
 
-                c.gameObject.transform.parent = Maze.transform;
-                
                 c.WallLeft.SetActive(maze.cells[x, y].WallLeft);
                 c.WallBottom.SetActive(maze.cells[x, y].WallBottom);
             }
@@ -119,25 +112,15 @@ public class MazeSpawner : MonoBehaviour
         {
             // ignored
         }
-        
+
         SpawnItem();
     }
 
     private void Update()
     {
-        _distanceText.text = "Осталось ходов: " + DistanceToStart;
+        _distanceText.text = "Remaining moves: " + DistanceToStart;
     }
-
-    private void GenerateMazeZone(MazeGenerator generator, Vector2 offset)
-    {
-        GameObject mazeZone = new GameObject("MazeZone");
-        mazeZone.AddComponent<BoxCollider2D>().size = new Vector2(generator.Width - 1, generator.Height - 1);
-        mazeZone.GetComponent<BoxCollider2D>().isTrigger = true;
-        mazeZone.GetComponent<BoxCollider2D>().offset = offset;
-        mazeZone.transform.position = Vector2.zero;
-        mazeZone.tag = "IsMaze";
-    }
-
+    
     private void SpawnItem()
     {
         try
