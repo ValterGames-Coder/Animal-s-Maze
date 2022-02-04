@@ -5,16 +5,24 @@ using TMPro;
 
 public class CameraState : MonoBehaviour
 {
+    private Camera _camera;
     [SerializeField] private int _level;
-    [SerializeField] private List<Vector2> _positions;
+    [SerializeField] private List<Vector3> _positions;
     public List<Vector3> Sizes;
+    [SerializeField] private List<Color> _colors;
     private MazeSpawner _mazeSpawner;
     [SerializeField] private TMP_Text _levelText;
     private WinsController _winsController;
     [HideInInspector] public int LevelForList;
+    [SerializeField] private AudioSource _winAudio;
+    [SerializeField] private GameObject _allMapButton;
+    [SerializeField] private float _speed;
+    [SerializeField] private AnimationCurve _curve;
+    private bool _allMapSelected;
     
     void Start()
     {
+        _camera = Camera.main;
         _mazeSpawner = FindObjectOfType<MazeSpawner>();
         _winsController = FindObjectOfType<WinsController>();
         if(PlayerPrefs.HasKey("Level") == false) PlayerPrefs.SetInt("Level", 1);
@@ -39,40 +47,36 @@ public class CameraState : MonoBehaviour
         else if (_level >= 90 && _level <= 119)
         {
             LevelForList = 4;
-            Camera.main.orthographicSize = 9;
         }
         else if (_level >= 120 && _level <= 149)
         {
             LevelForList = 5;
-            Camera.main.orthographicSize = 9;
         }
         else if (_level >= 150 && _level <= 199)
         {
             LevelForList = 6;
-            Camera.main.orthographicSize = 10;
         }
         else if (_level >= 200 && _level <= 299)
         {
             LevelForList = 7;
-            Camera.main.orthographicSize = 11;
         }
         else if (_level >= 300 && _level <= 399)
         {
             LevelForList = 8;
-            Camera.main.orthographicSize = 12;
         }
         else if (_level >= 400 && _level <= 499)
         {
             LevelForList = 9;
-            Camera.main.orthographicSize = 13;
         }
         else if (_level >= 500)
         {
             LevelForList = 10;
-            Camera.main.orthographicSize = 15;
         }
         
         transform.position = _positions[LevelForList];
+        _camera.orthographicSize = _positions[LevelForList].z;
+        _camera.backgroundColor = _colors[LevelForList];
+        
         _mazeSpawner.MazeZoneOffset = _positions[LevelForList];
 
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
@@ -82,7 +86,11 @@ public class CameraState : MonoBehaviour
 
     void Update()
     {
-        if (_winsController.Win) StartCoroutine(NextLevel());
+        if (_winsController.Win)
+        {
+            StartCoroutine(NextLevel());
+            _winAudio.Play();
+        }
     }
     
     private bool _nextLevelComplete;
@@ -94,6 +102,6 @@ public class CameraState : MonoBehaviour
         PlayerPrefs.SetInt("Level", _level);
         yield return new WaitForSeconds(3);
         SceneController.LoadScene(0);
-    } 
-    
+    }
+
 }
